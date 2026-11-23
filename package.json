@@ -1,0 +1,12 @@
+{
+  "name": "teams-pr-notifier",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "GitHub PR alerts and a daily open-PR digest, posted to a Microsoft Teams channel.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "digest": "node src/daily-digest.js",
+    "notify": "node src/notify-poll.js"
+  }
+}
