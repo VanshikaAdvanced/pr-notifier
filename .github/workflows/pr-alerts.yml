@@ -2,8 +2,9 @@ name: PR alerts to Teams
 
 on:
   schedule:
-    # GitHub may delay scheduled runs by several minutes; 10 is the practical floor.
-    - cron: '*/10 * * * *'
+    # UTC, weekdays 07:00-16:50 = 8am-5:50pm UK in summer (BST), 7am-4:50pm in winter (GMT).
+    # Limited hours keep private-repo usage (~1,300 min/month) under the 2,000 free minutes.
+    - cron: '*/10 7-16 * * 1-5'
   workflow_dispatch:
 
 permissions:

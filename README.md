@@ -4,7 +4,7 @@ Watches one or more GitHub repos from a separate repo and posts to a Microsoft T
 
 ## What you get
 
-- **PR alerts** (checked every ~10 minutes): PR opened, merged, approved, changes requested, or commented on with text. Drafts stay quiet until they are ready.
+- **PR alerts** (checked every ~10 minutes, weekdays 07:00-16:50 UTC; the first run of each day catches up on anything since the last run): PR opened, merged, approved, changes requested, or commented on with text. Drafts stay quiet until they are ready.
 - **Daily digest** (weekday mornings): open PRs, drafts, awaiting review, changes requested, approved and ready to merge, stale PRs, the oldest open PR, plus lists of the stalest PRs and those waiting longest for review.
 
 ## Setup
@@ -21,6 +21,7 @@ Watches one or more GitHub repos from a separate repo and posts to a Microsoft T
 ## Notes
 
 - Scheduled workflows only run from the default branch, and GitHub can delay them by several minutes. They are paused after 60 days with no repo activity.
+- Private repos on a free GitHub account get 2,000 Actions minutes a month. The alerts schedule uses about 1,300 and the digest about 22; widening the hours or shortening the interval can exceed the limit and block all workflows until the month resets.
 - The digest time is the `cron` line in `daily-digest.yml`. It is in UTC.
 - Alerts cover everything since the last successful run. After a failed run, the next one catches up.
 - Run locally to test the digest: `TEAMS_WEBHOOK_URL=... GITHUB_TOKEN=... REPOS=owner/repo node src/daily-digest.js`
