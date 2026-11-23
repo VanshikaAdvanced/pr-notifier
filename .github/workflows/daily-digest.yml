@@ -2,8 +2,12 @@ name: Daily PR digest
 
 on:
   schedule:
-    # Cron is UTC. 04:00 UTC, Mon-Fri. Adjust to your team's morning.
-    - cron: '0 4 * * 1-5'
+    # Morning: 09:00 India time (IST, no clock change) = 03:30 UTC, Mon-Fri.
+    - cron: '30 3 * * 1-5'
+    # Evening: 17:00 UK time is 16:00 UTC in summer (BST) and 17:00 UTC in winter (GMT).
+    # Both are scheduled; the script only posts for the one that is 5pm in London.
+    - cron: '0 16 * * 1-5'
+    - cron: '0 17 * * 1-5'
   workflow_dispatch:
 
 permissions:
@@ -23,3 +27,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           REPOS: ${{ vars.REPOS }}
           STALE_DAYS: ${{ vars.STALE_DAYS || '5' }}
+          DIGEST_SCHEDULE: ${{ github.event.schedule }}

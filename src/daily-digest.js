@@ -9,6 +9,21 @@ const STALE_DAYS = Number(process.env.STALE_DAYS || 5);
 const MAX_LISTED = Number(process.env.MAX_LISTED || 5);
 const DAY_MS = 86_400_000;
 
+const MORNING_CRON = '30 3 * * 1-5';
+const isEvening = process.env.DIGEST_SCHEDULE && process.env.DIGEST_SCHEDULE !== MORNING_CRON;
+const label = isEvening ? '🌆 Evening PR digest' : '☀️ Morning PR digest';
+
+// Evening runs are scheduled at both 16:00 and 17:00 UTC; only the one that is 5pm in London posts.
+if (isEvening) {
+  const londonHour = Number(
+    new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hour12: false, timeZone: 'Europe/London' }).format(new Date()),
+  );
+  if (londonHour !== 17) {
+    console.log(`Skipping: London hour is ${londonHour}, not 17`);
+    process.exit(0);
+  }
+}
+
 if (!TOKEN) throw new Error('GITHUB_TOKEN is not set');
 if (REPOS.length === 0) throw new Error('No repositories configured (set REPOS or GITHUB_REPOSITORY)');
 
@@ -88,9 +103,9 @@ const date = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'num
 
 const body =
   prs.length === 0
-    ? [text(`☀️ PR digest · ${date}`, { weight: 'Bolder', size: 'Medium' }), text('🎉 No open pull requests. Inbox zero!')]
+    ? [text(`${label} · ${date}`, { weight: 'Bolder', size: 'Medium' }), text('🎉 No open pull requests. Inbox zero!')]
     : [
-        text(`☀️ PR digest · ${date}`, { weight: 'Bolder', size: 'Medium' }),
+        text(`${label} · ${date}`, { weight: 'Bolder', size: 'Medium' }),
         text(REPOS.join(', '), { isSubtle: true, spacing: 'None' }),
         {
           type: 'FactSet',

@@ -21,7 +21,7 @@ Watches one or more GitHub repos from a separate repo and posts to a Microsoft T
 ## Notes
 
 - Scheduled workflows only run from the default branch, and GitHub can delay them by several minutes. They are paused after 60 days with no repo activity.
-- Private repos on a free GitHub account get 2,000 Actions minutes a month. The alerts schedule uses about 1,300 and the digest about 22; widening the hours or shortening the interval can exceed the limit and block all workflows until the month resets.
-- The digest time is the `cron` line in `daily-digest.yml`. It is in UTC.
+- Private repos on a free GitHub account get 2,000 Actions minutes a month. The alerts schedule uses about 1,300 and the digests about 66; widening the hours or shortening the interval can exceed the limit and block all workflows until the month resets.
+- The digest posts weekdays at 09:00 India time (03:30 UTC) and 17:00 UK time. The UK time is scheduled at both 16:00 and 17:00 UTC, and the script skips whichever is not 5pm in London, so it follows the clock change. To change times, edit the `cron` lines in `daily-digest.yml` (UTC) and `MORNING_CRON` in `src/daily-digest.js`.
 - Alerts cover everything since the last successful run. After a failed run, the next one catches up.
 - Run locally to test the digest: `TEAMS_WEBHOOK_URL=... GITHUB_TOKEN=... REPOS=owner/repo node src/daily-digest.js`
